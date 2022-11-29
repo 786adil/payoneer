@@ -28,7 +28,7 @@ import {db} from './Firebase';
             })
             .then(() => {
               setLoader(false);
-              alert("Your message has been submitted👍");
+              alert("Submitted Successfully👍");
             })
             .catch((error) => {
               alert(error.message);
