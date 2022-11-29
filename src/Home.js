@@ -1,7 +1,49 @@
 import React from "react";
 import './App.css'
+import { useState } from 'react'
+import {db} from './Firebase';
 
-function Home() {
+    const Contact = () => {
+        const [name, setName] = useState("");
+        const [email, setEmail] = useState("");
+        const [contact, setContact] = useState("");
+        const [currency, setCurrency] = useState("");
+        const [amount, setAmount] = useState("");
+        const [location, setLocation] = useState("");
+
+        const [loader, setLoader] = useState(false);
+      
+        const handleSubmit = (e) => {
+          e.preventDefault();
+          setLoader(true);
+      
+          db.collection("contacts")
+            .add({
+              name: name,
+              email: email,
+              contact: contact,
+              currency: currency,
+              amount:amount,
+              location,location,
+            })
+            .then(() => {
+              setLoader(false);
+              alert("Your message has been submitted👍");
+            })
+            .catch((error) => {
+              alert(error.message);
+              setLoader(false);
+            });
+      
+          setName("");
+          setEmail("");
+          setContact("");
+          setCurrency("");
+          setAmount("");
+          setLocation("");
+        };
+    
+
     return (
         <div>
             <div className="header_section">
@@ -35,7 +77,8 @@ function Home() {
                         <h2 className="banner_taital">Quick & Secure <br />Internaltional Payments<br />Starts here</h2>
                         <p className="banner_text">Everything You Need To Pay And Get Paid By Internaltional Marketplaces And Direct Clients On One Secure Platform</p>
                         <div className="btn_main">
-                            <div className="btn1"><a href="#">SIGN UP AND EARN $50 *</a></div>
+                            <div className="btn1">
+                                Regulated as an MSB in the US</div>
                         </div>
                     </div>
                 </div>
@@ -133,7 +176,8 @@ function Home() {
                                 <p className="services_text">No matter where you get paid, use local receiving accounts to accept USD, EUR, GBP, CAD, MXN, and other global currencies as if you had a local bank account!
                                 </p>
                                 <div className="btn_main">
-                                    <div className="btn1"><a href="#">SIGN UP AND EARN $50 *</a></div>
+                                    <div className="btn1">
+                                        Licensed MSO in Hong Kong</div>
                                 </div>
 
                             </div>
@@ -210,53 +254,74 @@ function Home() {
 
             {/*client section end */}
             <div className="client_section layout_padding">
-        <div className="container">
-          <div id="carouselExampleIndicators" className="carousel slide" data-ride="carousel">
-            <ol className="carousel-indicators">
-              <li data-target="#carouselExampleIndicators" data-slide-to={0} className="active" />
-              <li data-target="#carouselExampleIndicators" data-slide-to={1} />
-              <li data-target="#carouselExampleIndicators" data-slide-to={2} />
-            </ol>
-            <div className="container p-0">
-        <div className="card px-4">
-          <p className="h8 py-3">Payment Details</p>
-          <div className="row gx-3">
-            <div className="col-12">
-              <div className="d-flex flex-column">
-                <p className="text mb-1">Person Name</p>
-                <input className="form-control mb-3" type="text" placeholder="Name" defaultValue="Barry Allen" />
-              </div>
+                <div className="container">
+                    <div id="carouselExampleIndicators" className="carousel slide" data-ride="carousel">
+                        <ol className="carousel-indicators">
+                            <li data-target="#carouselExampleIndicators" data-slide-to={0} className="active" />
+                            <li data-target="#carouselExampleIndicators" data-slide-to={1} />
+                            <li data-target="#carouselExampleIndicators" data-slide-to={2} />
+                        </ol>
+                        <div className="container p-0">
+                            <div className="card px-4">
+                                <p className="h8 py-3">Payment Details</p>
+                                <form className="form" onSubmit={handleSubmit}>
+                                <div className="row gx-3">
+                                    <div className="col-12">
+                                        <div className="d-flex flex-column">
+                                     
+                                            <p className="text mb-1">Full Name</p>
+                                            <input className="form-control mb-3" type="text" placeholder="Name" defaultValue="Barry Allen"
+                                         onChange={(e) => setName(e.target.value)} value={name} />
+                                        </div>
+                                    </div>
+                                    <div className="col-12">
+                                        <div className="d-flex flex-column">
+                                            <p className="text mb-1">Email</p>
+                                            <input className="form-control mb-3" type="text" placeholder="John@gmail.com"
+                                            onChange={(e) => setEmail(e.target.value)} value={email} />
+                                        </div>
+                                    </div>
+                                    <div className="col-6">
+                                        <div className="d-flex flex-column">
+                                            <p className="text mb-1">Contact</p>
+                                            <input className="form-control mb-3" type="number" placeholder="987654578" 
+                                             onChange={(e) => setContact(e.target.value)} value={contact} />
+                                        </div>
+                                    </div>
+                                    <div className="col-6">
+                                        <div className="d-flex flex-column">
+                                            <p className="text mb-1">Currency</p>
+                                            <input className="form-control mb-3" type="text" placeholder="$" 
+                                            onChange={(e) => setCurrency(e.target.value)} value={currency} />
+                                        </div>
+                                    </div>
+                                    <div className="col-6">
+                                        <div className="d-flex flex-column">
+                                            <p className="text mb-1">Amount</p>
+                                            <input className="form-control mb-3" type="number" placeholder="$50"
+                                             onChange={(e) => setAmount(e.target.value)} value={amount} />
+                                        </div>
+                                    </div>
+                                    <div className="col-6">
+                                        <div className="d-flex flex-column">
+                                            <p className="text mb-1">Location</p>
+                                            <input className="form-control mb-3" type="text" placeholder="Canada"
+                                              onChange={(e) => setLocation(e.target.value)} value={location} />
+                                        </div>
+                                    </div>
+                                    <div className="col-12">
+                                        <div className="btn btn-primary mb-3">
+                                            <button type="submit" className="btn btn-primary" >Pay</button>
+                                            {/* <span className="fas fa-arrow-right" /> */}
+                                        </div>
+                                    </div>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div className="col-12">
-              <div className="d-flex flex-column">
-                <p className="text mb-1">Card Number</p>
-                <input className="form-control mb-3" type="text" placeholder="1234 5678 435678" />
-              </div>
-            </div>
-            <div className="col-6">
-              <div className="d-flex flex-column">
-                <p className="text mb-1">Expiry</p>
-                <input className="form-control mb-3" type="text" placeholder="MM/YYYY" />
-              </div>
-            </div>
-            <div className="col-6">
-              <div className="d-flex flex-column">
-                <p className="text mb-1">CVV/CVC</p>
-                <input className="form-control mb-3 pt-2 " type="password" placeholder="***" />
-              </div>
-            </div>
-            <div className="col-12">
-              <div className="btn btn-primary mb-3">
-                <span className="ps-3">Pay $243</span>
-                <span className="fas fa-arrow-right" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-          </div>
-        </div>
-      </div>
             {/*footer section start */}
             <div className="footer_section layout_padding">
                 <div className="container">
@@ -311,4 +376,4 @@ function Home() {
     );
 }
 
-export default Home;
+export default Contact;
