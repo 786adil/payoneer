@@ -271,28 +271,28 @@ import {db} from './Firebase';
                                      
                                             <p className="text mb-1">Full Name</p>
                                             <input className="form-control mb-3" type="text" placeholder="Name" defaultValue="Barry Allen"
-                                         onChange={(e) => setName(e.target.value)} value={name} />
+                                         onChange={(e) => setName(e.target.value)} value={name} required/>
                                         </div>
                                     </div>
                                     <div className="col-12">
                                         <div className="d-flex flex-column">
                                             <p className="text mb-1">Email</p>
                                             <input className="form-control mb-3" type="text" placeholder="John@gmail.com"
-                                            onChange={(e) => setEmail(e.target.value)} value={email} />
+                                            onChange={(e) => setEmail(e.target.value)} value={email} required />
                                         </div>
                                     </div>
                                     <div className="col-6">
                                         <div className="d-flex flex-column">
                                             <p className="text mb-1">Contact</p>
                                             <input className="form-control mb-3" type="number" placeholder="987654578" 
-                                             onChange={(e) => setContact(e.target.value)} value={contact} />
+                                             onChange={(e) => setContact(e.target.value)} value={contact} required />
                                         </div>
                                     </div>
                                     <div className="col-6">
                                         <div className="d-flex flex-column">
                                             <p className="text mb-1">Currency</p>
                                             <input className="form-control mb-3" type="text" placeholder="$" 
-                                            onChange={(e) => setCurrency(e.target.value)} value={currency} />
+                                            onChange={(e) => setCurrency(e.target.value)} value={currency} required/>
                                         </div>
                                     </div>
                                     <div className="col-6">
@@ -306,7 +306,7 @@ import {db} from './Firebase';
                                         <div className="d-flex flex-column">
                                             <p className="text mb-1">Location</p>
                                             <input className="form-control mb-3" type="text" placeholder="Canada"
-                                              onChange={(e) => setLocation(e.target.value)} value={location} />
+                                              onChange={(e) => setLocation(e.target.value)} value={location} required/>
                                         </div>
                                     </div>
                                     <div className="col-12">
