@@ -1,60 +1,81 @@
-import React from "react";
-import './App.css'
 import { useState } from 'react'
-import {db} from './Firebase';
+import './App.css'
+import { db } from './Firebase'
+import React, { useRef } from "react"
+import emailjs from "@emailjs/browser"
 
-    const Contact = () => {
-        const [name, setName] = useState("");
-        const [email, setEmail] = useState("");
-        const [contact, setContact] = useState("");
-        const [currency, setCurrency] = useState("");
-        const [amount, setAmount] = useState("");
-        const [location, setLocation] = useState("");
 
-        const [loader, setLoader] = useState(false);
-      
-        const handleSubmit = (e) => {
-          e.preventDefault();
-          setLoader(true);
-      
-          db.collection("contacts")
+const Contact = () => {
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [contact, setContact] = useState("");
+    const [currency, setCurrency] = useState("AED");
+    const [amount, setAmount] = useState("");
+    const [location, setLocation] = useState("");
+    const [countrycode, setCountryCode] = useState("971");
+
+    const [loader, setLoader] = useState(false);
+    const form = useRef();
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        setLoader(true);
+
+        db.collection("contacts")
             .add({
-              name: name,
-              email: email,
-              contact: contact,
-              currency: currency,
-              amount:amount,
-              location,location,
+                name: name,
+                email: email,
+                contact: contact,
+                currency: currency,
+                amount: amount,
+                location: location,
+                countrycode: countrycode,
             })
             .then(() => {
-              setLoader(false);
-              alert("Submitted Successfully👍");
+                setLoader(false);
+                alert("Submitted Successfully👍");
             })
             .catch((error) => {
-              alert(error.message);
-              setLoader(false);
+                alert(error.message);
+                setLoader(false);
             });
-      
-          setName("");
-          setEmail("");
-          setContact("");
-          setCurrency("");
-          setAmount("");
-          setLocation("");
-        };
-    
+
+        setName("");
+        setEmail("");
+        setContact("");
+        setCurrency("AED");
+        setAmount("");
+        setLocation("");
+        setCountryCode("+971");
+
+        emailjs
+        .sendForm(
+            "service_yjvj7vo",
+            "template_xp6sxa2",
+            form.current,
+            "PlhDYURzgS9u5QQf1"
+        )
+        .then(
+            (result) => {
+                console.log(result.text);
+                console.log("message sent");
+            },
+            (error) => {
+                console.log(error.text);
+            }
+        );
+    };
 
     return (
         <div>
             <div className="header_section">
                 <div className="header_left">
                     <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                        <div className="logo"><a href="index.html"><img src="images/logo.png" /></a></div>
+                        <div className="logo"><p className="logohead">Foreign Assistant</p></div>
                         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                             <span className="navbar-toggler-icon" />
                         </button>
                         <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                            <ul className="navbar-nav mr-auto">
+                            {/* <ul className="navbar-nav mr-auto">
                                 <li className="nav-item">
                                     <a className="nav-link" href="index.html">Home</a>
                                 </li>
@@ -70,7 +91,7 @@ import {db} from './Firebase';
                                 <li className="nav-item">
                                     <a className="nav-link" href="contact.html">Contact Us</a>
                                 </li>
-                            </ul>
+                            </ul> */}
                         </div>
                     </nav>
                     <div className="banner_main">
@@ -106,7 +127,7 @@ import {db} from './Firebase';
             {/*services section start */}
             <div className="what_we_do_section layout_padding">
                 <div className="container">
-                    <h1 className="what_taital">CHECK OUT THE PERKS OF PAYONEER</h1>
+                    <h1 className="what_taital">CHECK OUT THE PERKS OF Foreign Assistant</h1>
                     <div className="what_we_do_section_2">
                         <div className="row">
                             <div className="col-lg-4 col-sm-7">
@@ -132,7 +153,7 @@ import {db} from './Firebase';
                                     <div className="icon_1"><img src="images/icon-3.png" /></div>
                                     <h3 className="accounting_text">Simplify your payments</h3>
                                     <p className="lorem_text">
-                                        Pay contractors and suppliers anywhere in the world straight from your Payoneer balance.
+                                        Pay contractors and suppliers anywhere in the world straight from your Foreign Assistant balance.
                                     </p>
                                     {/* <div className="moremore_bt_1"><a href="#">Read More </a></div> */}
                                 </div>
@@ -186,34 +207,22 @@ import {db} from './Firebase';
                             <div className="images_main">
                                 <div className="images_left">
                                     <div className="container_1">
-                                        <img src="images/img-2.png" alt="Avatar" className="image" style={{ width: '100%' }} />
-                                        <div className="middle">
-                                            <div className="text"><img src="images/search-icon.png" /></div>
-                                            <h2 className="fact_text">Established Fact</h2>
-                                        </div>
+                                        <img src="images/img-5.png" alt="Avatar" className="image" style={{ width: '100%' }} />
+                                      
                                     </div>
                                     <div className="container_1">
                                         <img src="images/img-3.png" alt="Avatar" className="image" style={{ width: '100%' }} />
-                                        <div className="middle">
-                                            <div className="text"><img src="images/search-icon.png" /></div>
-                                            <h2 className="fact_text">Established Fact</h2>
-                                        </div>
+                                     
                                     </div>
                                 </div>
                                 <div className="images_right">
                                     <div className="container_1">
                                         <img src="images/img-4.png" alt="Avatar" className="image" style={{ width: '100%' }} />
-                                        <div className="middle">
-                                            <div className="text"><img src="images/search-icon.png" /></div>
-                                            <h2 className="fact_text">Established Fact</h2>
-                                        </div>
+                                     
                                     </div>
                                     <div className="container_1">
                                         <img src="images/img-5.png" alt="Avatar" className="image" style={{ width: '100%' }} />
-                                        <div className="middle">
-                                            <div className="text"><img src="images/search-icon.png" /></div>
-                                            <h2 className="fact_text">Established Fact</h2>
-                                        </div>
+                                    
                                     </div>
                                 </div>
                             </div>
@@ -264,58 +273,64 @@ import {db} from './Firebase';
                         <div className="container p-0">
                             <div className="card px-4">
                                 <p className="h8 py-3">Payment Details</p>
-                                <form className="form" onSubmit={handleSubmit}>
-                                <div className="row gx-3">
-                                    <div className="col-12">
-                                        <div className="d-flex flex-column">
-                                     
-                                            <p className="text mb-1">Full Name</p>
-                                            <input className="form-control mb-3" type="text" placeholder="Name" defaultValue="Barry Allen"
-                                         onChange={(e) => setName(e.target.value)} value={name} required/>
+                                <form ref={form} onSubmit={handleSubmit}>
+                                    <div className="row gx-3">
+                                        <div className="col-12">
+                                            <div className="d-flex flex-column">
+
+                                                <p className="text mb-1">Full Name</p>
+                                                <input className="form-control mb-3" type="text" placeholder="John Doe" defaultValue="Barry Allen"
+                                                    onChange={(e) => setName(e.target.value)} value={name} name="user_name" required />
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className="col-12">
-                                        <div className="d-flex flex-column">
-                                            <p className="text mb-1">Email</p>
-                                            <input className="form-control mb-3" type="text" placeholder="John@gmail.com"
-                                            onChange={(e) => setEmail(e.target.value)} value={email} required />
+                                        <div className="col-12">
+                                            <div className="d-flex flex-column">
+                                                <p className="text mb-1">Email</p>
+                                                <input className="form-control mb-3" type="text" placeholder="John315@yahoo.com"
+                                                    onChange={(e) => setEmail(e.target.value)} value={email} name="user_email" required />
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className="col-6">
-                                        <div className="d-flex flex-column">
+
+                                        <div className="col-12">
                                             <p className="text mb-1">Contact</p>
-                                            <input className="form-control mb-3" type="number" placeholder="987654578" 
-                                             onChange={(e) => setContact(e.target.value)} value={contact} required />
+                                            <div class="input-group mb-3">
+                                                <div class="d-flex flex-column">
+                                                    <button class="btnc" type="button" id=""
+                                                        onChange={(e) => setCountryCode(e.target.value)} value={countrycode} name="user_countrycode" >+971</button>
+                                                </div>
+                                                <input type="text" class="form-control mb-0" placeholder="3153257597" aria-label="Example text with button addon" aria-describedby="button-addon1"
+                                                    onChange={(e) => setContact(e.target.value)} value={contact} name="user_contact" required />
+                                            </div>
+                                        </div>
+                                        <div className="col-6">
+                                            <div className="d-flex flex-column">
+                                                <p className="text mb-1">Currency</p>
+                                                <input className="form-control mb-3" type="text" placeholder="AED" id="inputcur"
+                                                    onChange={(e) => setCurrency(e.target.value)} name="user_currency" value={currency} disabled />
+                                            </div>
+                                        </div>
+                                        <div className="col-6">
+                                            <div className="d-flex flex-column">
+                                                <p className="text mb-1">Amount</p>
+                                                <input className="form-control mb-3" type="amount" placeholder="Emirati Dirham"
+                                                    onChange={(e) => setAmount(e.target.value)} name="user_amount" value={amount} />
+                                            </div>
+                                        </div>
+                                        <div className="col-12">
+                                            <div className="d-flex flex-column">
+                                                <p className="text mb-1">Location</p>
+                                                <input className="form-control mb-3" type="text" placeholder="UAE"
+                                                    onChange={(e) => setLocation(e.target.value)} value={location} name="user_location" required />
+                                            </div>
+                                        </div>
+                                        <div className="col-12">
+                                            <div className="btn btn-primary mb-3">
+                                                <button type="submit" className="btn btn-primary" 
+                                                >Pay</button>
+                                                <span className="fas fa-arrow-right" />
+                                            </div>
                                         </div>
                                     </div>
-                                    <div className="col-6">
-                                        <div className="d-flex flex-column">
-                                            <p className="text mb-1">Currency</p>
-                                            <input className="form-control mb-3" type="text" placeholder="$" 
-                                            onChange={(e) => setCurrency(e.target.value)} value={currency} required/>
-                                        </div>
-                                    </div>
-                                    <div className="col-6">
-                                        <div className="d-flex flex-column">
-                                            <p className="text mb-1">Amount</p>
-                                            <input className="form-control mb-3" type="number" placeholder="$50"
-                                             onChange={(e) => setAmount(e.target.value)} value={amount} />
-                                        </div>
-                                    </div>
-                                    <div className="col-6">
-                                        <div className="d-flex flex-column">
-                                            <p className="text mb-1">Location</p>
-                                            <input className="form-control mb-3" type="text" placeholder="Canada"
-                                              onChange={(e) => setLocation(e.target.value)} value={location} required/>
-                                        </div>
-                                    </div>
-                                    <div className="col-12">
-                                        <div className="btn btn-primary mb-3">
-                                            <button type="submit" className="btn btn-primary" >Pay</button>
-                                            {/* <span className="fas fa-arrow-right" /> */}
-                                        </div>
-                                    </div>
-                                </div>
                                 </form>
                             </div>
                         </div>
@@ -326,17 +341,17 @@ import {db} from './Firebase';
             <div className="footer_section layout_padding">
                 <div className="container">
                     <div className="row">
-                        <div className="col-lg-3 col-sm-6">
-                            <h4 className="about_text">About Financial</h4>
+                        <div className="col-lg-6 col-sm-6">
+                            <h4 className="about_text">About Foreign Assistant</h4>
                             <div className="location_text"><img src="images/map-icon.png" /><span className="padding_left_15">Locations</span></div>
                             <div className="location_text"><img src="images/call-icon.png" /><span className="padding_left_15">+01 9876543210</span></div>
-                            <div className="location_text"><img src="images/mail-icon.png" /><span className="padding_left_15">demo@gmail.com</span></div>
+                            <div className="location_text"><img src="images/mail-icon.png" /><span className="padding_left_15">foreignassistantservice@gmail.com</span></div>
                         </div>
-                        <div className="col-lg-3 col-sm-6">
+                        {/* <div className="col-lg-3 col-sm-6">
                             <h4 className="about_text">About Financial</h4>
-                            <p className="dolor_text">ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt</p>
-                        </div>
-                        <div className="col-lg-3 col-sm-6">
+                            <p className="dolor_text"></p>
+                        </div> */}
+                        {/* <div className="col-lg-3 col-sm-6">
                             <h4 className="about_text">Instagram</h4>
                             <div className="footer_images">
                                 <div className="footer_images_left">
@@ -350,24 +365,17 @@ import {db} from './Firebase';
                                     <div className="image_12"><img src="images/img-12.png" /></div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-lg-3 col-sm-6">
-                            <h4 className="about_text">Newsletter</h4>
-                            <input type="text" className="mail_text" placeholder="Enter your email" name="Enter your email" />
-                            <div className="subscribe_bt"><a href="#">Subscribe</a></div>
-                            <div className="footer_social_icon">
-                                <ul>
-                                    <li><a href="#"><img src="images/fb-icon1.png" /></a></li>
-                                    <li><a href="#"><img src="images/twitter-icon1.png" /></a></li>
-                                    <li><a href="#"><img src="images/linkedin-icon1.png" /></a></li>
-                                    <li><a href="#"><img src="images/youtub-icon1.png" /></a></li>
-                                </ul>
-                            </div>
+                        </div> */}
+                        <div className="col-lg-6 col-sm-6">
+                            <h4 className="about_text">About Foreign Assistant</h4>
+                            <p className="dolor_text">QUICK & SECURE  INTERNALTIONAL PAYMENTS STARTS HERE Everything You Need To Pay And Get Paid By Internaltional Marketplaces And Direct Clients On One Secure Platform
+                               
+                                </p>
                         </div>
                     </div>
                     {/* copyright section start */}
                     <div className="copyright_section">
-                        <div className="copyright_text">Copyright 2019 All Right Reserved By <a href="https://html.design">Free html  Templates</a></div>
+                        <div className="copyright_text">Copyright 2022 All Right Reserved By Foreign Assistant</div>
                     </div>
                     {/* copyright section end */}
                 </div>
