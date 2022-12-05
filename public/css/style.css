@@ -243,7 +243,7 @@ button {
 }
 
 .logo {
-    width: 25%;
+    width: 40%;
     float: left;
 }
 
@@ -285,7 +285,7 @@ button {
 .btn_main {
     width: 100%;
     float: left;
-    padding-top: 75px;
+    padding-top: 70px;
 }
 .more_bt {
     width: 170px;
