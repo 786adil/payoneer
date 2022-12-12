@@ -1,21 +1,26 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 import { db } from './Firebase'
 import React, { useRef } from "react"
 import emailjs from "@emailjs/browser"
-
+import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input'
+import 'react-phone-number-input/style.css'
+import axios from "axios";
+import { v4 as uuidv4 } from "uuid";
+import { isDate } from 'moment'
 
 const Contact = () => {
+
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [contact, setContact] = useState("");
-    const [currency, setCurrency] = useState("AED");
+    const [currency, setCurrency] = useState("");
     const [amount, setAmount] = useState("");
     const [location, setLocation] = useState("");
-    const [countrycode, setCountryCode] = useState("971");
-
+    const [status, setStatus] = useState("Pending");
     const [loader, setLoader] = useState(false);
     const form = useRef();
+
     const handleSubmit = (e) => {
         e.preventDefault();
         setLoader(true);
@@ -28,7 +33,10 @@ const Contact = () => {
                 currency: currency,
                 amount: amount,
                 location: location,
-                countrycode: countrycode,
+                status:status,
+                date:new Date().toLocaleDateString(),
+                time:new Date().toLocaleTimeString(),
+                
             })
             .then(() => {
                 setLoader(false);
@@ -42,28 +50,79 @@ const Contact = () => {
         setName("");
         setEmail("");
         setContact("");
-        setCurrency("AED");
+        setCurrency("");
         setAmount("");
         setLocation("");
-        setCountryCode("+971");
+        setStatus("Pending");
 
         emailjs
-        .sendForm(
-            "service_yjvj7vo",
-            "template_xp6sxa2",
-            form.current,
-            "PlhDYURzgS9u5QQf1"
-        )
-        .then(
-            (result) => {
-                console.log(result.text);
-                console.log("message sent");
-            },
-            (error) => {
-                console.log(error.text);
+            .sendForm(
+                "service_yjvj7vo",
+                "template_xp6sxa2",
+                form.current,
+                "PlhDYURzgS9u5QQf1"
+            )
+            .then(
+                (result) => {
+                    console.log(result.text);
+                    console.log("message sent");
+                },
+                (error) => {
+                    console.log(error.text);
+                }
+            );
+
+    }
+    const [countryState, setCountryState] = useState({
+        loading: false,
+        countries: [],
+        errorMessage: "",
+    });
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+            
+                setCountryState({
+                    ...countryState,
+                    loading: true,
+                });
+
+                const dataUrl = `https://restcountries.com/v3.1/all`;
+                const response = await axios.get(dataUrl);
+                setCountryState({
+                    ...countryState,
+                    countries: response.data,
+                    loading: false,
+                });
+            } catch (error) {
+                setCountryState({
+                    ...countryState,
+                    loading: false,
+                    errorMessage: "Sorry Something went wrong",
+                });
             }
-        );
-    };
+        };
+
+        fetchData();
+    }, []);
+    const { loading, errorMessage, countries } = countryState;
+    console.log("loading", loading);
+    console.log("countries", countries);
+    console.log("errorMessage", errorMessage);
+
+    const [selectedCountry, setSelectedCountry] = useState();
+    console.log("selectedCountry", selectedCountry);
+
+    //   find selected country data
+    //search selected country
+    const searchSelectedCountry = countries.find((obj) => {
+        if (obj.name.common === selectedCountry) {
+            return true;
+        }
+        return false;
+    });
+    console.log("searchSelectedCountry", searchSelectedCountry);
 
     return (
         <div>
@@ -75,23 +134,6 @@ const Contact = () => {
                             <span className="navbar-toggler-icon" />
                         </button>
                         <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                            {/* <ul className="navbar-nav mr-auto">
-                                <li className="nav-item">
-                                    <a className="nav-link" href="index.html">Home</a>
-                                </li>
-                                <li className="nav-item">
-                                    <a className="nav-link" href="about.html">About</a>
-                                </li>
-                                <li className="nav-item">
-                                    <a className="nav-link" href="services.html">Services</a>
-                                </li>
-                                <li className="nav-item">
-                                    <a className="nav-link" href="team.html">Team</a>
-                                </li>
-                                <li className="nav-item">
-                                    <a className="nav-link" href="contact.html">Contact Us</a>
-                                </li>
-                            </ul> */}
                         </div>
                     </nav>
                     <div className="banner_main">
@@ -99,7 +141,7 @@ const Contact = () => {
                         <p className="banner_text">Everything You Need To Pay And Get Paid By Internaltional Marketplaces And Direct Clients On One Secure Platform</p>
                         <div className="btn_main">
                             <div className="btn1">
-                                Regulated as an MSB in the US</div>
+                                Received On Local Currency</div>
                         </div>
                     </div>
                 </div>
@@ -107,24 +149,7 @@ const Contact = () => {
                     <img src="./images/header.png" className="banner_img" />
                 </div>
             </div>
-            {/*header section end */}
-            {/*about section start */}
-            {/* <div className="services_section layout_padding">
-      <div className="container">
-        <div className="row">
-          <div className="col-md-8">
-            <h1 className="services_taital">WELCOME TO FINANCIAL SERVICES</h1>
-            <p className="services_text">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it </p>
-            <div className="moremore_bt"><a href="#">Read More </a></div>
-          </div>
-          <div className="col-md-4">
-            <div><img src="images/img-1.png" className="image_1" /></div>
-          </div>
-        </div>
-      </div>
-    </div> */}
-            {/*about section end */}
-            {/*services section start */}
+    
             <div className="what_we_do_section layout_padding">
                 <div className="container">
                     <h1 className="what_taital">CHECK OUT THE PERKS OF Foreign Assistant</h1>
@@ -134,8 +159,7 @@ const Contact = () => {
                                 <div className="boxmain">
                                     <div className="icon_1"><img src="images/icon-1.png" /></div>
                                     <h3 className="accounting_text">Reduced fees</h3>
-                                    <p className="lorem_text">Pay up to 70% less compared to standard wire transfers. No hidden fees.</p>
-                                    {/* <div className="moremore_bt_1"><a href="#">Read More </a></div> */}
+                                    <p className="lorem_text">Pay up to 90% less compared to standard wire transfers. No hidden fees.</p>
                                 </div>
                             </div>
                             <div className="col-lg-4 col-sm-7">
@@ -143,9 +167,7 @@ const Contact = () => {
                                     <div className="icon_1"><img src="images/icon-2.png" /></div>
                                     <h3 className="accounting_text">Get paid in popular currencies</h3>
                                     <p className="lorem_text">Receiving accounts in a growing number of currencies and get paid like a local.
-
                                     </p>
-                                    {/* <div className="moremore_bt_1"><a href="#">Read More </a></div> */}
                                 </div>
                             </div>
                             <div className="col-lg-4 col-sm-7">
@@ -155,7 +177,6 @@ const Contact = () => {
                                     <p className="lorem_text">
                                         Pay contractors and suppliers anywhere in the world straight from your Foreign Assistant balance.
                                     </p>
-                                    {/* <div className="moremore_bt_1"><a href="#">Read More </a></div> */}
                                 </div>
                             </div>
                             <div className="col-lg-4 col-sm-7"><br />
@@ -163,7 +184,6 @@ const Contact = () => {
                                     <div className="icon_1"><img src="images/icon-4.png" /></div>
                                     <h3 className="accounting_text">Withdraw funds locally</h3>
                                     <p className="lorem_text">Easily move your funds between currencies and withdraw them to a local bank account.</p>
-                                    {/* <div className="moremore_bt_1"><a href="#">Read More </a></div> */}
                                 </div>
                             </div>
                             <div className="col-lg-4 col-sm-7"><br />
@@ -171,7 +191,6 @@ const Contact = () => {
                                     <div className="icon_1"><img src="images/icon-4.png" /></div>
                                     <h3 className="accounting_text">24/7 multilingual support</h3>
                                     <p className="lorem_text">Our team is available any time, day or night, to take your questions and offer assistance. No worries!</p>
-                                    {/* <div className="moremore_bt_1"><a href="#">Read More </a></div> */}
                                 </div>
                             </div>
                             <div className="col-lg-4 col-sm-7"><br />
@@ -179,15 +198,13 @@ const Contact = () => {
                                     <div className="icon_1"><img src="images/icon-4.png" /></div>
                                     <h3 className="accounting_text">Working Capital</h3>
                                     <p className="lorem_text">Give your business a boost with instant cash injections.</p>
-                                    {/* <div className="moremore_bt_1"><a href="#">Read More </a></div> */}
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            {/*services section end */}
-            {/*project section start */}
+
             <div className="project_section layout_padding">
                 <div className="container">
                     <div className="row">
@@ -198,31 +215,27 @@ const Contact = () => {
                                 </p>
                                 <div className="btn_main">
                                     <div className="btn1">
-                                        Licensed MSO in Hong Kong</div>
+                                        Received On Local Currency</div>
                                 </div>
-
                             </div>
                         </div>
                         <div className="col-md-6">
                             <div className="images_main">
                                 <div className="images_left">
                                     <div className="container_1">
-                                        <img src="images/img-5.png" alt="Avatar" className="image" style={{ width: '100%' }} />
-                                      
+                                        <img src="https://www.indiafilings.com/learn/wp-content/uploads/2018/08/Online-Payment-of-Income-Tax.jpg" alt="Avatar" className="image" style={{ width: '100%', height: "250px" }} />
                                     </div>
                                     <div className="container_1">
                                         <img src="images/img-3.png" alt="Avatar" className="image" style={{ width: '100%' }} />
-                                     
                                     </div>
                                 </div>
                                 <div className="images_right">
                                     <div className="container_1">
-                                        <img src="images/img-4.png" alt="Avatar" className="image" style={{ width: '100%' }} />
-                                     
+                                        <img src="https://www.goodreturns.in/img/2015/05/27-1432694604-businessman.jpg" alt="Avatar" className="image" style={{ width: '100%' }} />
+
                                     </div>
                                     <div className="container_1">
                                         <img src="images/img-5.png" alt="Avatar" className="image" style={{ width: '100%' }} />
-                                    
                                     </div>
                                 </div>
                             </div>
@@ -236,7 +249,7 @@ const Contact = () => {
                         <div className="col-lg-3 col-sm-6">
                             <div className="icon_1"><img src="images/icon-3.png" /></div>
                             <h3 className="accounting_text_1">1000+</h3>
-                            <p className="yers_text">Withdraw them to a local bank account in local currency</p>
+                            <p className="yers_text">Create an Invoice online for your payment.</p>
                         </div>
                         <div className="col-lg-3 col-sm-6">
                             <div className="icon_1"><img src="images/icon-4.png" /></div>
@@ -258,86 +271,77 @@ const Contact = () => {
                     </div>
                 </div>
             </div>
-            {/*project section end */}
-            {/*team section start */}
 
-            {/*client section end */}
             <div className="client_section layout_padding">
                 <div className="container">
                     <div id="carouselExampleIndicators" className="carousel slide" data-ride="carousel">
-                        <ol className="carousel-indicators">
-                            <li data-target="#carouselExampleIndicators" data-slide-to={0} className="active" />
-                            <li data-target="#carouselExampleIndicators" data-slide-to={1} />
-                            <li data-target="#carouselExampleIndicators" data-slide-to={2} />
-                        </ol>
                         <div className="container p-0">
-                            <div className="card px-4">
-                                <p className="h8 py-3">Payment Details</p>
-                                <form ref={form} onSubmit={handleSubmit}>
-                                    <div className="row gx-3">
-                                        <div className="col-12">
-                                            <div className="d-flex flex-column">
-
-                                                <p className="text mb-1">Full Name</p>
-                                                <input className="form-control mb-3" type="text" placeholder="John Doe" defaultValue="Barry Allen"
-                                                    onChange={(e) => setName(e.target.value)} value={name} name="user_name" required />
-                                            </div>
-                                        </div>
-                                        <div className="col-12">
-                                            <div className="d-flex flex-column">
-                                                <p className="text mb-1">Email</p>
-                                                <input className="form-control mb-3" type="text" placeholder="John315@yahoo.com"
-                                                    onChange={(e) => setEmail(e.target.value)} value={email} name="user_email" required />
-                                            </div>
-                                        </div>
-
-                                        <div className="col-12">
-                                            <p className="text mb-1">Contact</p>
-                                            <div class="input-group mb-3">
-                                                <div class="d-flex flex-column">
-                                                    <button class="btnc" type="button" id=""
-                                                        onChange={(e) => setCountryCode(e.target.value)} value={countrycode} name="user_countrycode" >+971</button>
-                                                </div>
-                                                <input type="text" class="form-control mb-0" placeholder="3153257597" aria-label="Example text with button addon" aria-describedby="button-addon1"
-                                                    onChange={(e) => setContact(e.target.value)} value={contact} name="user_contact" required />
-                                            </div>
-                                        </div>
-                                        <div className="col-6">
-                                            <div className="d-flex flex-column">
-                                                <p className="text mb-1">Currency</p>
-                                                <input className="form-control mb-3" type="text" placeholder="AED" id="inputcur"
-                                                    onChange={(e) => setCurrency(e.target.value)} name="user_currency" value={currency} disabled />
-                                            </div>
-                                        </div>
-                                        <div className="col-6">
-                                            <div className="d-flex flex-column">
-                                                <p className="text mb-1">Amount</p>
-                                                <input className="form-control mb-3" type="amount" placeholder="Emirati Dirham"
-                                                    onChange={(e) => setAmount(e.target.value)} name="user_amount" value={amount} />
-                                            </div>
-                                        </div>
-                                        <div className="col-12">
-                                            <div className="d-flex flex-column">
-                                                <p className="text mb-1">Location</p>
-                                                <input className="form-control mb-3" type="text" placeholder="UAE"
-                                                    onChange={(e) => setLocation(e.target.value)} value={location} name="user_location" required />
-                                            </div>
-                                        </div>
-                                        <div className="col-12">
-                                            <div className="btn btn-primary mb-3">
-                                                <button type="submit" className="btn btn-primary" 
-                                                >Pay</button>
-                                                <span className="fas fa-arrow-right" />
-                                            </div>
-                                        </div>
+                            <p className="h8 py-5">Payment Details</p>
+                            <form ref={form} onSubmit={handleSubmit}>
+                                <div className="form-row">
+                                    <div className="form-group col-md-6">
+                                        <label htmlFor="inputEmail4">Full Name</label>
+                                        <input type="text" className="form-control" placeholder="Enter Your Name"
+                                            onChange={(e) => setName(e.target.value)} value={name} name="user_name" required />
                                     </div>
-                                </form>
-                            </div>
+                                    <div className="form-group col-md-6">
+                                        <label htmlFor="inputPassword4">Email</label>
+                                        <input type="email" className="form-control" placeholder="Enter Your Email"
+                                            onChange={(e) => setEmail(e.target.value)} value={email} name="user_email" required />
+                                    </div>
+                                </div>
+                                <div className="form-row">
+                                    <div className="form-group col-md-6">
+                                        <label htmlFor="inputzip">Currency</label>
+                                        <select
+                                            value={currency}
+                                            onChange={(e) => setCurrency(e.target.value)}
+                                            required
+                                            className="select"
+                                            name="user_currency"
+                                        >
+                                            <option>--Select Currency--</option>
+                                            {countries.map((item) => {
+                                                return (
+                                                    <option key={uuidv4()} value={item.name.common}>
+                                                        {item.name.common}
+                                                    </option>
+                                                );
+                                            })}
+                                        </select>
+                                    </div>
+                                    <div className="form-group col-md-6">
+                                        <label htmlFor="inputPassword4">Amount</label>
+                                        <input type="number" className="form-control" placeholder="Enter Your Amount"
+                                            onChange={(e) => setAmount(e.target.value)} name="user_amount" value={amount}  min="1" max="1000"/>
+                                    </div>
+                                </div>
+                                <div className="form-row">
+                                    <div className="form-group col-md-6">
+                                        <label htmlFor="inputPassword4">Location</label>
+                                        <input type="text" className="form-control" placeholder="Enter Your Location"
+                                            onChange={(e) => setLocation(e.target.value)} value={location} name="user_location" required />
+                                    </div>
+                                    <div className="form-group col-md-6">
+                                        <label htmlFor="inputZip">Contact </label>
+                                        <PhoneInput
+                                            placeholder="Enter phone number"
+                                            value={contact}
+                                            onChange={setContact}
+                                            international={true}
+                                            withCountryCallingCode={true}
+                                            name="user_contact"
+                                            onBlur={() => { console.log(isValidPhoneNumber(contact)) }}
+                                        />
+                                    </div>
+                                </div>
+                                <button type="submit" className="paybtn">PAY</button>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
-            {/*footer section start */}
+
             <div className="footer_section layout_padding">
                 <div className="container">
                     <div className="row">
@@ -347,40 +351,20 @@ const Contact = () => {
                             <div className="location_text"><img src="images/call-icon.png" /><span className="padding_left_15">+01 9876543210</span></div>
                             <div className="location_text"><img src="images/mail-icon.png" /><span className="padding_left_15">foreignassistantservice@gmail.com</span></div>
                         </div>
-                        {/* <div className="col-lg-3 col-sm-6">
-                            <h4 className="about_text">About Financial</h4>
-                            <p className="dolor_text"></p>
-                        </div> */}
-                        {/* <div className="col-lg-3 col-sm-6">
-                            <h4 className="about_text">Instagram</h4>
-                            <div className="footer_images">
-                                <div className="footer_images_left">
-                                    <div className="image_12"><img src="images/img-12.png" /></div>
-                                    <div className="image_12"><img src="images/img-12.png" /></div>
-                                    <div className="image_12"><img src="images/img-12.png" /></div>
-                                </div>
-                                <div className="footer_images_right">
-                                    <div className="image_12"><img src="images/img-12.png" /></div>
-                                    <div className="image_12"><img src="images/img-12.png" /></div>
-                                    <div className="image_12"><img src="images/img-12.png" /></div>
-                                </div>
-                            </div>
-                        </div> */}
                         <div className="col-lg-6 col-sm-6">
                             <h4 className="about_text">About Foreign Assistant</h4>
                             <p className="dolor_text">QUICK & SECURE  INTERNALTIONAL PAYMENTS STARTS HERE Everything You Need To Pay And Get Paid By Internaltional Marketplaces And Direct Clients On One Secure Platform
-                               
-                                </p>
+
+                            </p>
                         </div>
                     </div>
-                    {/* copyright section start */}
                     <div className="copyright_section">
                         <div className="copyright_text">Copyright 2022 All Right Reserved By Foreign Assistant</div>
                     </div>
-                    {/* copyright section end */}
                 </div>
             </div>
         </div>
+
     );
 }
 
