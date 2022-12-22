@@ -7,8 +7,6 @@ import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input'
 import 'react-phone-number-input/style.css'
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
-import { isDate } from 'moment'
-
 const Contact = () => {
 
     const [name, setName] = useState("");
@@ -129,7 +127,8 @@ const Contact = () => {
             <div className="header_section">
                 <div className="header_left">
                     <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                        <div className="logo"><p className="logohead">Foreign Assistant</p></div>
+                        <div className="logo"><p className="logohead">Foreign Assistant</p>
+                        </div>
                         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                             <span className="navbar-toggler-icon" />
                         </button>

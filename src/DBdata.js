@@ -4,7 +4,6 @@ import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import { collection, doc, getDocs } from "firebase/firestore";
 import { db } from './Firebase';
-import moment from 'moment';
 
 const DBdata = () => {
 
