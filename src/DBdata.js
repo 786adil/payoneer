@@ -4,11 +4,13 @@ import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import { collection, doc, getDocs } from "firebase/firestore";
 import { db } from './Firebase';
+import { NavLink, useNavigate } from 'react-router-dom'
+import fire from './FirebaseAuth'
 
 const DBdata = () => {
 
     const [todos, setTodos] = useState([]);
-
+    const navigate = useNavigate();
     const fetchPost = async () => {
 
         await getDocs(collection(db, "contacts"))
@@ -37,6 +39,14 @@ const DBdata = () => {
     };
 
 
+      const Logout = ()=>{
+    fire.auth().signOut();
+    // alert("Log out Successfully")
+    navigate("/login")
+  }
+
+
+
     return (
         <div >
             <table className="table">
@@ -52,6 +62,7 @@ const DBdata = () => {
                         <th scope="col">Date & Time</th>
                         <th scope="col">Status</th>
                         <th scope="col">Action</th>
+                        
                     </tr>
                 </thead>
                 <tbody>  {
@@ -89,6 +100,7 @@ const DBdata = () => {
                 }
                 </tbody>
             </table>
+       <a href=''><p className='logout' onClick={Logout}>Log Out</p></a>
         </div>
     );
 

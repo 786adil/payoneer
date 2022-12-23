@@ -2,18 +2,19 @@
 import React, { useState } from "react";
 import fire from './FirebaseAuth'
 import './Login.css'
-
+import { NavLink, useNavigate } from 'react-router-dom'
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("")
+  const navigate = useNavigate();
   
   const  handleSubmit = (event) =>{
     event.preventDefault()
     console.log(email,password);
     fire.auth().signInWithEmailAndPassword(email,password).then(()=>{
-      alert("Login success")
-      
+      // alert("Login success")
+      navigate("/data")
     }).catch((error)=>{
       alert("No user exist | ",error);
     })

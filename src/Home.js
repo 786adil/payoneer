@@ -7,6 +7,8 @@ import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input'
 import 'react-phone-number-input/style.css'
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
+import {Link} from 'react-scroll'
+
 const Contact = () => {
 
     const [name, setName] = useState("");
@@ -122,6 +124,8 @@ const Contact = () => {
     });
     console.log("searchSelectedCountry", searchSelectedCountry);
 
+  
+
     return (
         <div>
             <div className="header_section">
@@ -138,10 +142,13 @@ const Contact = () => {
                     <div className="banner_main">
                         <h2 className="banner_taital">Quick & Secure <br />Internaltional Payments<br />Starts here</h2>
                         <p className="banner_text">Everything You Need To Pay And Get Paid By Internaltional Marketplaces And Direct Clients On One Secure Platform</p>
-                        <div className="btn_main">
-                            <div className="btn1">
-                                Received On Local Currency</div>
+                        <Link to="contact" spy={true} smooth={true}>
+                            <div className="btn_main">
+                            <div className="btn1" >
+                                Clik Here To Payment
+                            </div>
                         </div>
+                        </Link>
                     </div>
                 </div>
                 <div className="header_right">
@@ -271,7 +278,7 @@ const Contact = () => {
                 </div>
             </div>
 
-            <div className="client_section layout_padding">
+            <div id="contact" className="client_section layout_padding">
                 <div className="container">
                     <div id="carouselExampleIndicators" className="carousel slide" data-ride="carousel">
                         <div className="container p-0">
